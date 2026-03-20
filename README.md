@@ -10,7 +10,7 @@ This repository contains the implementation of a complete image classification p
 ## Performance Summary
 * **Final Validation Accuracy:** ~69%
 * **Winning Method:** Feature Fusion (CKN & HOG) + PCA + Kernel Ridge Regression (KRR).
-* **Key Kernel:** RBF (Radial Basis Function).
+* **Performance:** 5/35 teams
 
 ---
 
