@@ -59,6 +59,8 @@ The `run.py` script executes the following optimized sequence:
 
 ## Installation and Generation
 
+Be sure to install the data on this link :
+https://www.kaggle.com/competitions/data-challenge-kernel-methods-2025-2026/
 
 ```bash
 pip install -r requirements.txt
