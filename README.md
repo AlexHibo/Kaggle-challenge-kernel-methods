@@ -43,7 +43,7 @@ The `run.py` script executes the following optimized sequence:
 .
 ├── run.py                 # MAIN SCRIPT: Trains the model and generates Yte.csv
 ├── requirements.txt       # Dependencies
-├── kernel_method.pdf      # Detailed theoretical report and analysis
+├── Report.pdf             # Detailed theoretical report and analysis
 ├── challenge_kernel.ipynb # Experimental notebook and visualization
 └── src/                   # Source code modules
     ├── __init__.py
