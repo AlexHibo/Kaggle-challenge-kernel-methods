@@ -1,7 +1,7 @@
 # Kernel Methods for Image Classification
 **MVA / IASD 2025-2026 - Kaggle Data Challenge**
 
-This repository contains the implementation of a complete image classification pipeline for a subset of the CIFAR-10 dataset (5000 training / 2000 test images), based exclusively on **kernel methods**. The project was developed without deep learning frameworks, focusing on robust feature extraction and regularization to handle significant label noise.
+This repository contains the implementation of a complete image classification pipeline for a subset of the CIFAR-10 dataset (5000 training / 2000 test images), based exclusively on **kernel methods**. The project was developed without deep learning frameworks, focusing on robust feature extraction and regularization to handle significant label noise (see Report)
 
 **Authors:** Alexandre Mallez & Rayane Dakhlaoui
 
@@ -78,5 +78,8 @@ python run.py
 | 4 | CKN (256 filters) + PCA + RBF-KRR | $\approx 63\%$ | Richer features |
 | **5** | **CKN + HOG + PCA + RBF-KRR** | **$\approx 69\%$** | **Fusion** |
 
+## Details 
+
+For more details about our works, you can check the notebook and our report
 
 
