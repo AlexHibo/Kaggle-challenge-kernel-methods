@@ -1,52 +1,82 @@
-# 🧠 Kernel Methods for Image Classification
-**MVA / IASD 2025-2026 - Data Challenge Kaggle**
+# Kernel Methods for Image Classification
+**MVA / IASD 2025-2026 - Kaggle Data Challenge**
 
-Ce projet contient l'implémentation d'un pipeline complet de classification d'images pour un sous-ensemble de CIFAR-10, basé exclusivement sur des **méthodes à noyaux**. L'objectif est de maximiser la précision sans utiliser de bibliothèques de Deep Learning, tout en gérant un dataset comportant des labels bruités.
+This repository contains the implementation of a complete image classification pipeline for a subset of the CIFAR-10 dataset (5000 training / 2000 test images), based exclusively on **kernel methods**. The project was developed without deep learning frameworks, focusing on robust feature extraction and regularization to handle significant label noise.
 
-**Auteurs :** Alexandre Mallez & Rayane Dakhlaoui
-
----
-
-## 📈 Performance Finale
-* **Accuracy (Validation) :** ~69%
-* **Méthode retenue :** Fusion de descripteurs CKN & HOG + PCA + Kernel Ridge Regression (KRR) avec noyau RBF.
+**Authors:** Alexandre Mallez & Rayane Dakhlaoui
 
 ---
 
-## 🚀 Pipeline Technique
+## Performance Summary
+* **Final Validation Accuracy:** ~69%
+* **Winning Method:** Feature Fusion (CKN & HOG) + PCA + Kernel Ridge Regression (KRR).
+* **Key Kernel:** RBF (Radial Basis Function).
 
-Le script `run.py` exécute la séquence optimisée suivante :
+---
 
-### 1. Prétraitement & Augmentation
-* **Normalisation :** Mise à l'échelle des pixels.
-* **Augmentation :** Flips horizontaux et "Random Crops" (padding de 4px reflect) pour moyenner les prédictions et gagner en robustesse face au bruit des labels.
+## Technical Pipeline
 
-### 2. Extraction de Features
-* **CKN (Convolutional Kernel Networks) :** Couche convolutive avec filtres appris par **K-means (implémenté from scratch)**, blanchiment ZCA et Spatial Pyramid Pooling (SPM) sur 3 niveaux (1x1, 2x2, 4x4).
-* **HOG (Histogram of Oriented Gradients) :** Implémentation manuelle (9 bins d'orientation, cellules 4x4, normalisation par bloc L2-Hys).
+The `run.py` script executes the following optimized sequence:
 
-### 3. Réduction & Régularisation
-* **PCA (via SVD) :** Projection sur les **2048 composantes principales** pour éliminer le bruit et accélérer le calcul de la matrice de Gram.
+### 1. Data Preprocessing & Augmentation
+* **Normalization:** Standard pixel scaling and centering.
+* **Augmentation:** Horizontal flips and "Random Crops" (4px reflect padding) are used to create a multi-crop voting system. This significantly improves robustness against the training label noise.
+
+### 2. Feature Extraction
+* **CKN (Convolutional Kernel Networks):** A convolutional layer using 512 filters learned via **K-means++ (implemented from scratch)**, followed by ZCA whitening and Spatial Pyramid Pooling (SPM) over 3 levels (1x1, 2x2, 4x4).
+* **HOG (Histogram of Oriented Gradients):** A manual implementation featuring 9 orientation bins, 4x4 pixel cells, and L2-Hys block normalization for spatial invariance.
+
+### 3. Dimensionality Reduction (PCA)
+* **Method:** SVD-based PCA.
+* **Component Selection:** Projection onto the top **2048 principal components**. This step acts as a powerful regularizer by discarding noisy directions and drastically reduces the computational cost of the Gram matrix.
 
 ### 4. Classification
-* **KRR (Kernel Ridge Regression) :** Résolution analytique via décomposition de Cholesky.
-* **Noyau RBF :** $$K(x, y) = \exp(-\gamma \|x-y\|^2)$$ avec $\gamma$ estimé sur la variance des données.
+* **KRR (Kernel Ridge Regression):** Solved analytically via Cholesky decomposition ($K + \lambda I$).
+* **RBF Kernel:** $K(x, y) = \exp(-\gamma \|x-y\|^2)$ where $\gamma$ is adaptively estimated based on data variance.
+* **Hyperparameters:** $\lambda = 0.05$ (regularization) and $\alpha = 0.3$ (weighting factor between CKN and HOG features).
 
 ---
 
-## 📂 Structure du Projet
+## 📂 Project Structure
 
 ```text
 .
-├── run.py                 # Script principal (génère Yte_pred.csv)
-├── requirements.txt       # Dépendances (numpy, scipy, cvxopt, pandas)
-├── kernel_method.pdf      # Rapport théorique
-├── challenge_kernel.ipynb # Notebook d'expérimentation
-└── src/                   # Code source
+├── run.py                 # MAIN SCRIPT: Trains the model and generates Yte.csv
+├── requirements.txt       # Dependencies
+├── kernel_method.pdf      # Detailed theoretical report and analysis
+├── challenge_kernel.ipynb # Experimental notebook and visualization
+└── src/                   # Source code modules
     ├── __init__.py
-    ├── data.py            # Chargement et data augmentation
-    ├── kernels.py         # RBF, Linear, Chi2, Hist. Intersection
-    ├── ckn.py             # CKN (K-means, whitening, convolution)
-    ├── hog.py             # Descripteurs HOG "from scratch"
-    ├── pca.py             # PCA via SVD
-    └── regressors.py      # KRR et SVM (via cvxopt)
+    ├── data.py            # Loading, HWC transformation, and augmentation
+    ├── kernels.py         # RBF, Linear, Chi2, and Histogram Intersection kernels
+    ├── ckn.py             # CKN logic (K-means, ZCA whitening, SPM)
+    ├── hog.py             # Manual HOG descriptor implementation
+    ├── pca.py             # PCA analysis and projection via SVD
+    └── regressors.py      # KRR and SVM solvers (via cvxopt)
+```
+
+---
+
+## Installation and Generation
+
+
+```bash
+pip install -r requirements.txt
+python run.py
+```
+
+
+
+## 📊 Experimental Results
+
+| Step | Method | Val. acc. | Key gain |
+| :--- | :--- | :--- | :--- |
+| 1 | Raw pixels + RBF-SVM | $\approx 25\%$ | Baseline |
+| 2 | HOG + RBF-SVM | $\approx 57\%$ | Spatial invariance |
+| 2b | HOG + augmentation + RBF-SVM | $\approx 59\%$ | Augmentation |
+| 3 | HOG + augmentation + RBF-KRR | $\approx 62\%$ | Faster regressor |
+| 4 | CKN (256 filters) + PCA + RBF-KRR | $\approx 63\%$ | Richer features |
+| **5** | **CKN + HOG + PCA + RBF-KRR** | **$\approx 69\%$** | **Fusion** |
+
+
+
