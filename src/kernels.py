@@ -9,7 +9,7 @@ def linear_kernel(X, Y):
 
 def rbf_kernel(X, Y, gamma=None):
     """
-    K(x,y) = exp(-γ ||x-y||^2)
+    K(x,y) = exp(-gamma* ||x-y||^2)
     """
     if gamma is None:
         # gamma = 1.0 / X.shape[1]
