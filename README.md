@@ -37,7 +37,7 @@ The `run.py` script executes the following optimized sequence:
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 .
@@ -69,7 +69,7 @@ python run.py
 
 
 
-## 📊 Experimental Results
+## Experimental Results
 
 | Step | Method | Val. acc. | Key gain |
 | :--- | :--- | :--- | :--- |
