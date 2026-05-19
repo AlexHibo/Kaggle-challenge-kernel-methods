@@ -10,7 +10,7 @@ This repository contains the implementation of a complete image classification p
 ## Performance Summary
 * **Final Validation Accuracy:** ~69%
 * **Winning Method:** Feature Fusion (CKN & HOG) + PCA + Kernel Ridge Regression (KRR).
-* **Ranking:** 4/35 teams with first submission, **1/35** teams with this final pipeline
+* **Ranking:** 4/35 teams on first submission, **1/35** teams on final pipeline
 
 ---
 
